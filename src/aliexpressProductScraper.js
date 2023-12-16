@@ -42,7 +42,13 @@ const AliexpressProductScraper = async (
       descriptionDataPromise = page.goto(descriptionUrl).then(async () => {
         const descriptionPageHtml = await page.content();
         const $ = cheerio.load(descriptionPageHtml);
-        return $("body").html();
+        const paragraphs = [];
+        $('p').each((index, element) => {
+          const paragraphText = $(element).text();
+          paragraphs.push({ index, text: paragraphText });
+        });
+
+        return paragraphs;
       });
     }
 
