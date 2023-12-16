@@ -1,4 +1,4 @@
-import scrape from "./../index.js";
+const scrape = require("./../index.js");
 
 scrape("1005005167379524", {
   reviewsCount: 20,

@@ -1,9 +1,8 @@
-import puppeteer from "puppeteer";
-import * as cheerio from "cheerio";
-
-import { get as GetVariants } from "./variants.js";
-import { get as GetReviews } from "./reviews.js";
-import { get as GetShippingDetails } from "./shipping.js";
+const puppeteer = require("puppeteer");
+const cheerio = require("cheerio");
+const { get: GetVariants } = require("./variants.js");
+const { get: GetReviews } = require("./reviews.js");
+const { get: GetShippingDetails } = require("./shipping.js");
 
 const AliexpressProductScraper = async (
   id,
@@ -121,4 +120,4 @@ const AliexpressProductScraper = async (
   }
 };
 
-export default AliexpressProductScraper;
+module.exports = AliexpressProductScraper;

@@ -54,4 +54,4 @@ const getShippingData = (shippingData) => {
   return shippingOptions;
 };
 
-export { getShippingData as get };
+module.exports = { get: getShippingData };

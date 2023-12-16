@@ -35,4 +35,4 @@ const get = ({ priceLists = [], optionsLists = [] }) => {
   };
 };
 
-export { get };
+module.exports = { get };

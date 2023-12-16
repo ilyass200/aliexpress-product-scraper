@@ -1,5 +1,5 @@
-import fetch from "node-fetch";
-import { faker } from "@faker-js/faker";
+const fetch = require("node-fetch");
+const { faker } = require("@faker-js/faker");
 
 const getReview = (review) => {
   const gender = review.buyerGender === "M" ? "male" : "female";
@@ -59,4 +59,4 @@ const get = async ({ productId, total, limit, filterReviewsBy = "all" }) => {
   return allReviews;
 };
 
-export { get };
+module.exports = { get };
