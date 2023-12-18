@@ -4,7 +4,7 @@
   "description": "Get Aliexpress product details as a json reponse including feedbacks, variants, description, images, etc.,",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "mocha --recursive --require @babel/register tests"
   },
   "keywords": [
     "aliexpress",
@@ -28,8 +28,14 @@
   "license": "MIT",
   "dependencies": {
     "@faker-js/faker": "8.3.1",
+    "chai": "^4.3.10",
     "cheerio": "1.0.0-rc.12",
     "node-fetch": "^2.7.0",
     "puppeteer": "21.5.2"
+  },
+  "devDependencies": {
+    "@babel/register": "^7.22.15",
+    "mocha": "^10.2.0",
+    "yargs": "^17.7.2"
   }
 }
