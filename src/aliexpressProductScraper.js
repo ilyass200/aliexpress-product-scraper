@@ -6,7 +6,7 @@ const { get: GetShippingDetails } = require("./shipping.js");
 
 const AliexpressProductScraper = async (
   id,
-  { reviewsCount = 20, filterReviewsBy = "all", puppeteerOptions = {} } = {}
+  { reviewsCount = 20, filterReviewsBy = "all", puppeteerOptions = {}, onlyInfo=false } = {}
 ) => {
   if (!id) {
     throw new Error("Please provide a valid product id");
@@ -31,9 +31,11 @@ const AliexpressProductScraper = async (
       throw new Error("No data found");
     }
 
-    const shipping = GetShippingDetails(
-      data?.webGeneralFreightCalculateComponent?.originalLayoutResultList || []
-    );
+    if(!onlyInfo){
+      const shipping = GetShippingDetails(
+        data?.webGeneralFreightCalculateComponent?.originalLayoutResultList || []
+      );
+    }
 
     /** Scrape the description page for the product using the description url */
     const descriptionUrl = data?.productDescComponent?.descriptionUrl;
@@ -52,22 +54,38 @@ const AliexpressProductScraper = async (
       });
     }
 
-    const reviewsPromise = GetReviews({
-      productId: id,
-      limit: REVIEWS_COUNT,
-      total: data.feedbackComponent.totalValidNum,
-      filterReviewsBy,
-    });
+    let reviewsPromise = null;
+    if(!onlyInfo) {
+      reviewsPromise = GetReviews({
+        productId: id,
+        limit: REVIEWS_COUNT,
+        total: data.feedbackComponent.totalValidNum,
+        filterReviewsBy,
+      });
+    }
 
     const [descriptionData, reviews] = await Promise.all([
-      descriptionDataPromise,
-      reviewsPromise,
+        descriptionDataPromise,
+        reviewsPromise,
     ]);
 
     await browser.close();
 
     /** Build the JSON response with aliexpress product details */
-    const json = {
+    let json = null;
+    if(onlyInfo) {
+       json = {
+        title: data.productInfoComponent.subject,
+        description: descriptionData,
+        images: (data.imageComponent && data.imageComponent.imagePathList) || [],
+        variants: GetVariants({
+          optionsLists: data?.skuComponent?.productSKUPropertyList || [],
+          priceLists: data?.priceComponent?.skuPriceList || [],
+        }),
+        specs: data.productPropComponent.props,
+      };
+    } else {
+       json = {
       title: data.productInfoComponent.subject,
       categoryId: data.productInfoComponent.categoryId,
       productId: data.productInfoComponent.id,
@@ -114,7 +132,8 @@ const AliexpressProductScraper = async (
         max: data.priceComponent.discountPrice.maxActivityAmount,
       },
       shipping,
-    };
+       };
+   }
 
     return json;
   } catch (error) {
