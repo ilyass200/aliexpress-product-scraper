@@ -1,5 +1,4 @@
-const get = ({ priceLists = [], optionsLists = [] }) => {
-  priceLists = priceLists || [];
+const get = ({ optionsLists = [] }) => {
   optionsLists = optionsLists || [];
 
   const options = optionsLists.map((list) => {
@@ -17,21 +16,8 @@ const get = ({ priceLists = [], optionsLists = [] }) => {
     };
   });
 
-  const lists = priceLists.map((list) => {
-    return {
-      skuId: list.skuId,
-      optionValueIds: list.skuPropIds,
-      availableQuantity: list.skuVal.availQuantity,
-      originalPrice: list.skuVal.skuAmount,
-      salePrice: list.skuVal.skuActivityAmount,
-    };
-  });
-
-  // console.log({ options, lists });
-
   return {
-    options: options,
-    prices: lists,
+    options: options
   };
 };
 

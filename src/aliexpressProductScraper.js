@@ -80,8 +80,16 @@ const AliexpressProductScraper = async (
         images: (data.imageComponent && data.imageComponent.imagePathList) || [],
         variants: GetVariants({
           optionsLists: data?.skuComponent?.productSKUPropertyList || [],
-          priceLists: data?.priceComponent?.skuPriceList || [],
         }),
+        currencyInfo: data.currencyComponent,
+        originalPrice: {
+          min: data.priceComponent.origPrice.minAmount,
+          max: data.priceComponent.origPrice.maxAmount,
+        },
+        salePrice: {
+          min: data.priceComponent.discountPrice.minActivityAmount,
+          max: data.priceComponent.discountPrice.maxActivityAmount,
+        },
         specs: data.productPropComponent.props,
       };
     } else {
@@ -119,7 +127,6 @@ const AliexpressProductScraper = async (
       reviews,
       variants: GetVariants({
         optionsLists: data?.skuComponent?.productSKUPropertyList || [],
-        priceLists: data?.priceComponent?.skuPriceList || [],
       }),
       specs: data.productPropComponent.props,
       currencyInfo: data.currencyComponent,
