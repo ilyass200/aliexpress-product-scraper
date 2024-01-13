@@ -6,7 +6,7 @@ const { get: GetShippingDetails } = require("./shipping.js");
 
 const AliexpressProductScraper = async (
   id,
-  { reviewsCount = 20, filterReviewsBy = "all", puppeteerOptions = {}, onlyInfo=false } = {}
+  { reviewsCount = 20, filterReviewsBy = "all", puppeteerOptions = {}, onlyInfo=false, timeout = 0} = {}
 ) => {
   if (!id) {
     throw new Error("Please provide a valid product id");
@@ -16,6 +16,7 @@ const AliexpressProductScraper = async (
 
   try {
     const REVIEWS_COUNT = reviewsCount || 20;
+    const setTimeout = timeout;
     browser = await puppeteer.launch({
       headless: "new",
       ...(puppeteerOptions || {}),
@@ -23,7 +24,7 @@ const AliexpressProductScraper = async (
     const page = await browser.newPage();
 
     /** Scrape the aliexpress product page for details */
-    await page.goto(`https://www.aliexpress.com/item/${id}.html`);
+    await page.goto(`https://www.aliexpress.com/item/${id}.html`, {waitUntil: 'load', timeout: setTimeout});
     const aliExpressData = await page.evaluate(() => runParams);
 
     const data = aliExpressData?.data;
